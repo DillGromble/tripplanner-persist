@@ -11,6 +11,19 @@
 
 $(function () {
 
+  $.get('/api')
+  .then(function ([hotels, restaurants, activities]) {
+    hotels.forEach(makeOption, $hotelSelect);
+    restaurants.forEach(makeOption, $restaurantSelect);
+    activities.forEach(makeOption, $activitySelect);
+
+    attractionsModule.loadEnhancedAttractions('hotels', hotels);
+    attractionsModule.loadEnhancedAttractions('restaurants', restaurants);
+    attractionsModule.loadEnhancedAttractions('activities', activities);
+    $optionsPanel.on('click', 'button[data-action="add"]', reticulateSelect);
+  })
+  .catch( console.error.bind(console) );
+
     // jQuery selects
     var $optionsPanel = $('#options-panel');
     var $hotelSelect = $optionsPanel.find('#hotel-choices');
@@ -18,16 +31,12 @@ $(function () {
     var $activitySelect = $optionsPanel.find('#activity-choices');
 
     // make all the option tags (second arg of `forEach` is a `this` binding)
-    hotels.forEach(makeOption, $hotelSelect);
-    restaurants.forEach(makeOption, $restaurantSelect);
-    activities.forEach(makeOption, $activitySelect);
+    
 
     // Once you've made AJAX calls to retrieve this information,
     // call attractions.loadEnhancedAttractions in the fashion
     // exampled below in order to integrate it.
-    attractionsModule.loadEnhancedAttractions('hotels', hotels);
-    attractionsModule.loadEnhancedAttractions('restaurants', restaurants);
-    attractionsModule.loadEnhancedAttractions('activities', activities);
+    
 
     function makeOption(databaseAttraction) {
         var $option = $('<option></option>') // makes a new option tag
@@ -37,13 +46,13 @@ $(function () {
     }
 
     // what to do when the `+` button next to a `select` is clicked
-    $optionsPanel.on('click', 'button[data-action="add"]', function () {
+    function reticulateSelect() {
         var $select = $(this).siblings('select');
         var type = $select.data('type'); // from HTML data-type attribute
         var id = $select.find(':selected').val();
         // get associated attraction and add it to the current day in the trip
         var attraction = attractionsModule.getByTypeAndId(type, id);
         tripModule.addToCurrent(attraction);
-    });
+    };
 
 });
