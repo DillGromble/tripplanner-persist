@@ -1,11 +1,13 @@
 var Promise = require('bluebird');
 var router = require('express').Router();
 var options = require('./api/options');
+var days = require('./api/days');
 var Hotel = require('../models/hotel');
 var Restaurant = require('../models/restaurant');
 var Activity = require('../models/activity');
 
 router.use('/api', options)
+router.use('/api/days', days)
 router.get('/', function(req, res, next) {
   Promise.all([
     Hotel.findAll(),
