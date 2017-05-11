@@ -1,5 +1,5 @@
 'use strict';
-/* global $ tripModule attractionsModule hotels restaurants activities */
+/* global $ tripModule attractionsModule */
 
 /**
  * This module fills the `select` tags with `option`s.
@@ -11,18 +11,18 @@
 
 $(function () {
 
-  $.get('/api')
-  .then(function ([hotels, restaurants, activities]) {
-    hotels.forEach(makeOption, $hotelSelect);
-    restaurants.forEach(makeOption, $restaurantSelect);
-    activities.forEach(makeOption, $activitySelect);
+    $.get('/api')
+    .then(function ([hotels, restaurants, activities]) {
+      hotels.forEach(makeOption, $hotelSelect);
+      restaurants.forEach(makeOption, $restaurantSelect);
+      activities.forEach(makeOption, $activitySelect);
 
-    attractionsModule.loadEnhancedAttractions('hotels', hotels);
-    attractionsModule.loadEnhancedAttractions('restaurants', restaurants);
-    attractionsModule.loadEnhancedAttractions('activities', activities);
-    $optionsPanel.on('click', 'button[data-action="add"]', reticulateSelect);
-  })
-  .catch( console.error.bind(console) );
+      attractionsModule.loadEnhancedAttractions('hotels', hotels);
+      attractionsModule.loadEnhancedAttractions('restaurants', restaurants);
+      attractionsModule.loadEnhancedAttractions('activities', activities);
+      $optionsPanel.on('click', 'button[data-action="add"]', reticulateSelect);
+    })
+    .catch( console.error.bind(console) );
 
     // jQuery selects
     var $optionsPanel = $('#options-panel');
@@ -31,12 +31,12 @@ $(function () {
     var $activitySelect = $optionsPanel.find('#activity-choices');
 
     // make all the option tags (second arg of `forEach` is a `this` binding)
-    
+
 
     // Once you've made AJAX calls to retrieve this information,
     // call attractions.loadEnhancedAttractions in the fashion
     // exampled below in order to integrate it.
-    
+
 
     function makeOption(databaseAttraction) {
         var $option = $('<option></option>') // makes a new option tag

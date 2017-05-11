@@ -31,13 +31,20 @@ var dayModule = (function () {
     this.hotel = null;
     this.restaurants = [];
     this.activities = [];
-    // for days based on existing data
+
     utilsModule.merge(data, this);
-    if (this.hotel) this.hotel = attractionsModule.getEnhanced(this.hotel);
-    this.restaurants = this.restaurants.map(attractionsModule.getEnhanced);
-    this.activities = this.activities.map(attractionsModule.getEnhanced);
-    // remainder of constructor
-    this.buildButton().showButton();
+
+    // $.get('/api')
+    // .then(([hotels, restaurants, activities]) => {
+    //   if (this.hotelId) this.hotel = attractionsModule.getEnhanced(hotels[this.hotelId - 1]);
+    // })
+    // .then( () => this.buildButton().showButton())
+    // .catch(err => console.log(err));
+      if (this.hotel) this.hotel = attractionsModule.getEnhanced(this.hotel);
+      this.restaurants = this.restaurants.map(attractionsModule.getEnhanced);
+      this.activities = this.activities.map(attractionsModule.getEnhanced);
+
+      this.buildButton().showButton()
   }
 
   // automatic day button handling
@@ -96,8 +103,14 @@ var dayModule = (function () {
     // adding to the day object
     switch (attraction.type) {
       case 'hotel':
-        if (this.hotel) this.hotel.hide();
-        this.hotel = attraction;
+        $.get('/api/days/' + this.number, (day) => {
+          if (day.hotelId) this.hotel.hide()
+        })
+        .then( () => {
+          return $.post('/api/days/' + this.number, { attId: attraction.id })
+        })
+        .then( () => { this.hotel = attraction })
+        .catch(err => console.log(err))
         break;
       case 'restaurant':
         utilsModule.pushUnique(this.restaurants, attraction);
