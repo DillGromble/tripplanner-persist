@@ -34,17 +34,21 @@ var dayModule = (function () {
 
     utilsModule.merge(data, this);
 
-    // $.get('/api')
-    // .then(([hotels, restaurants, activities]) => {
-    //   if (this.hotelId) this.hotel = attractionsModule.getEnhanced(hotels[this.hotelId - 1]);
-    // })
-    // .then( () => this.buildButton().showButton())
-    // .catch(err => console.log(err));
-      if (this.hotel) this.hotel = attractionsModule.getEnhanced(this.hotel);
+    $.get('/api')
+    .then(([hotels, restaurants, activities]) => {
+      if (data.hotelId) this.hotel = attractionsModule.getEnhanced(hotels[data.hotelId - 1]);
       this.restaurants = this.restaurants.map(attractionsModule.getEnhanced);
       this.activities = this.activities.map(attractionsModule.getEnhanced);
-
       this.buildButton().showButton()
+    })
+    .catch(err => console.log(err));
+
+
+    // if (this.hotel) this.hotel = attractionsModule.getEnhanced(this.hotel);
+    // this.restaurants = this.restaurants.map(attractionsModule.getEnhanced);
+    // this.activities = this.activities.map(attractionsModule.getEnhanced);
+
+    // this.buildButton().showButton()
   }
 
   // automatic day button handling

@@ -35,6 +35,7 @@ var tripModule = (function () {
   function switchTo (newCurrentDay) {
     if (currentDay) currentDay.hide();
     currentDay = newCurrentDay;
+    console.log(currentDay);
     currentDay.show();
   }
 
@@ -83,8 +84,10 @@ var tripModule = (function () {
       $.get('/api/days', function (data) {
         days = data;
         days = days.map(day => dayModule.create(day))
+        return Promise.all([days]);
       })
-      .then( () => {
+      .then( (days) => {
+        days = days[0];
         if (days.length < 1) $(addDay);
         else switchTo(days[days.length - 1]);
       })
